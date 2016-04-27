@@ -1,0 +1,43 @@
+<!-- public/index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <base href="/">
+
+    <title>Distributed Store</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheets/style.css"> <!-- custom styles -->
+
+    <!-- JS -->
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-route/angular-route.min.js"></script>
+
+    <!-- ANGULAR CUSTOM -->
+    <script src="javascripts/controllers/DemoController.js"></script>
+    <script src="javascripts/controllers/MainController.js"></script>
+    <script src="javascripts/appRoutes.js"></script>
+    <script src="javascripts/app.js"></script>
+</head>
+<body ng-app="DistributedStoreDemo">
+<div class="container">
+	
+	<!-- HEADER -->
+	<nav class="navbar navbar-inverse">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="/">Distributed Store</a>
+		</div>
+		<!--ul class="nav navbar-nav">
+			<li><a href="/nerds">Nerds</a></li>
+			<li><a href="/geeks">Geeks</a></li>
+		</ul-->
+	</nav>
+
+	<!-- ANGULAR DYNAMIC CONTENT -->
+	<div ng-view></div>
+
+</div>
+</body>
+</html>

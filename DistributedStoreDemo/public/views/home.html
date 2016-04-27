@@ -1,0 +1,69 @@
+<div class="row">
+	<div class="col-md-12">
+		<h3>{{nodes.length}} Active Nodes </h3>
+		<button type="button" class="btn btn-primary" ng-click="spawn(1)">Spawn</button>
+	</div>	
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Node</th>
+					<th>PID</th>
+					<th>Port</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="node in nodes">
+					<td>{{$index}}</td>
+					<td>{{node.pid}}</td>
+					<td>{{node.port}}</td>
+					<td><button type="button" class="btn btn-primary" ng-click="setActiveNode(node)">Test</button></td>
+					<td><button type="button" class="btn btn-primary" ng-click="kill(node.pid)">Kill</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="row" ng-if="activeNode">
+	<div class="col-md-12">
+		<h3>Testing Port: {{activeNode.port}}</h3>
+	</div>
+	<div class="col-md-6">
+		<h3>Put</h3>
+		<form role="form">
+			<div class="form-group">
+				<label>Key:</label>
+				<input type="text" class="form-control" ng-model="newKey">
+			</div>
+			<div class="form-group">
+				<label>Value:</label>
+				<input type="text" class="form-control" ng-model="newValue">
+			</div>
+			<div class="form-group">
+				<button type="button" class="btn btn-primary" ng-click="put(newKey,newValue)">Put</button>
+			</div>
+		</form>
+	</div>
+	<div class="col-md-6">
+		<h3>Get</h3>
+		<form role="form">
+			<div class="form-group">
+				<label>Key:</label>
+				<input type="text" class="form-control" ng-model="getKey">
+			</div>
+			<div class="form-group">
+				<label>URL:</label>
+				<h4>http://localhost:{{activeNode.port}}/{{getKey}}</h4>
+			</div>
+			<div class="form-group">
+				<button type="button" class="btn btn-primary" ng-click="get(getKey)">Get</button>
+			</div>
+			<div class="form-group" ng-if="getResponse">
+				<h4>{{getResponse}}</h4>
+			</div>
+		</form>
+	</div>
+</div>
