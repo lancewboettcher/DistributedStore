@@ -78,6 +78,7 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 		$http.get('/killAll').success(function (response) {
 			console.log("Killed All");
 			$scope.nodes = [];
+			$scope.activeNode = null;
 		});
 	}
 	$scope.getLeader = function() {
