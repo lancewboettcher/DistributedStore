@@ -24,15 +24,19 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 			
             console.log("Spawned " + numNodes + " Nodes");
 
-            var payload = {};
-            payload.id = "tcp+msgpack://localhost:" + data[data.length - 1].port;
-            console.log("Trying to join with: " + payload.id);
 
             if ($scope.nodes.length > 1 && $scope.leader.port != undefined && $scope.leader.port != "undefined") {
-	            $http.post("http://localhost:" + $scope.leader.port + "/join/",payload).success(function(data, status) {
+	            
+            	for (var i = $scope.nodes.length - numNodes; i < $scope.nodes.length; i++) {
+            		var payload = {};
+		            payload.id = "tcp+msgpack://localhost:" + data[i].port;
+		            console.log("Trying to join with: " + payload.id);
+
+		           	$http.post("http://localhost:" + $scope.leader.port + "/join/",payload).success(function(result, status) {
 					
-		            console.log("Process Joined");
-		        });
+		            	console.log("Process Joined");
+		        	});
+            	}
 		    }
         });
 	};
