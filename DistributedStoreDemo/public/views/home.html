@@ -20,7 +20,7 @@
 </div>
 <div class="row">
 	<div class="col-md-12">
-		<table class="table">
+		<table class="table table-hover">
 			<thead>
 				<tr>
 					<th>Node</th>
@@ -35,7 +35,7 @@
 					<td>{{node.port}}</td>
 					<td><button type="button" class="btn btn-primary" ng-click="setActiveNode(node)">Test</button></td>
 					<td><button type="button" class="btn btn-primary" ng-click="kill(node.pid)">Kill</button></td>
-					<td ng-if="node.port==leader.port"><div class="alert alert-success" role="alert">Leader</div></td>
+					<td ng-if="node.port==leader.port"><div class="alert alert-success" role="alert" style="text-align:center;">Leader</div></td>
 				</tr>
 			</tbody>
 		</table>
@@ -44,13 +44,13 @@
 		<button type="button" class="btn btn-primary pull-right" ng-click="getLeader()">Get Leader</button>
 	</div>
 </div>
-
+<hr>
 <div class="row" ng-if="activeNode">
 	<div class="col-md-12">
 		<h3>Testing Port: {{activeNode.port}}</h3>
 	</div>
 	<div class="col-md-6">
-		<h3>Put</h3>
+		<h3>Put Single</h3>
 		<form role="form">
 			<div class="form-group">
 				<label>Key:</label>
@@ -64,17 +64,63 @@
 				<button type="button" class="btn btn-primary" ng-click="put(newKey,newValue)">Put</button>
 			</div>
 		</form>
+		<h3>Put Batch</h3>
+			<div class="form-group">
+				<label>File:</label>
+				<ng-csv-import content="csv.content"
+				    header="csv.header" 
+				    separator="csv.separator"
+				    result="csv.result"
+				    accept="csv.accept">
+				</ng-csv-import>
+			</div>
+			<div class="form-group">
+				<label>Key:</label>
+			    <select ng-model="batchPut.key">
+				  <option ng-repeat="key in batchPut.keys" value="{{key.index}}">{{key.name}}</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label>Value(s):</label>
+				<select ng-model="batchPut.value1">
+				  <option ng-repeat="key in batchPut.keys" value="{{key.index}}">{{key.name}}</option>
+				</select>
+				<select ng-model="batchPut.value2">
+				  <option value=""></option>
+				  <option ng-repeat="key in batchPut.keys" value="{{key.index}}">{{key.name}}</option>
+				</select>
+			</div>
+			<!--div class="form-group">
+				&lt;{{batchPut.key}}&gt;:&lt;{{batchPut.value1}},{{batchPut.value2}}&gt;
+			</div-->
+			<div class="form-group form-inline">
+				<div class="form-group">
+				<label>Range:</label>
+				<input style="width:100px;"type="text" class="form-control" ng-model="batchPut.min">
+				</div>
+				<div class="form-group">
+				<input style="width:100px;"type="text" class="form-control" ng-model="batchPut.max">
+			</div>
+			</div>
+			<div class="form-group">
+				<button type="button" class="btn btn-primary" ng-click="putBatch(batchPut.key,batchPut.value1,batchPut.value2, batchPut.min, batchPut.max)">Put</button>
+			</div>
 	</div>
 	<div class="col-md-6">
 		<h3>Get</h3>
-		<form role="form">
 			<div class="form-group">
 				<label>Key:</label>
 				<input type="text" class="form-control" ng-model="getKey">
 			</div>
-			<div class="form-group">
-				<label>URL:</label>
-				<h4>http://localhost:{{activeNode.port}}/{{getKey}}</h4>
+			<div class="form-group form-inline">
+				<div class="form-group">
+					<label>URL:</label>
+					<h4>POST http://localhost:{{activeNode.port}}/</h4>
+				</div>
+				<div class="form-group pull-right">
+					<label>Payload:</label>
+					<h4>{"key":"{{getKey}}"}</h4>
+				</div>
 			</div>
 			<div class="form-group">
 				<button type="button" class="btn btn-primary" ng-click="get(getKey)">Get</button>
@@ -82,6 +128,5 @@
 			<div class="form-group" ng-if="getResponse">
 				<h4>{{getResponse}}</h4>
 			</div>
-		</form>
 	</div>
 </div>

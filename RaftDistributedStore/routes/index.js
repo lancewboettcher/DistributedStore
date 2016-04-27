@@ -38,7 +38,20 @@ router.get('/:key', function(req, res, next) {
 	node.get(req.params.key, function (err, value) {
 	    if (err) console.log('Ooops!', err); // likely the key was not found
 
-	    res.send(req.params.key + " : " + value);
+	    res.send(value);
+	  })
+
+});
+
+router.post('/get', function(req, res, next) {
+
+  	console.log("Getting: " + req.body.key);
+	var node = req.app.get('node');
+
+	node.get(req.body.key, function (err, value) {
+	    if (err) console.log('Ooops!', err); // likely the key was not found
+
+	    res.send(value);
 	  })
 
 });
@@ -57,6 +70,23 @@ router.post('/', function(req, res, next) {
 
 	    res.send(value);
 	  })
+	})
+
+});
+
+router.post('/batch', function(req, res, next) {
+
+	var node = req.app.get('node');
+
+	node.batch(req.body, function (err) {
+	  if (err) console.log('Ooops!', err); // some kind of I/O error
+
+	  res.send("Success");
+	  /*node.get(req.body.key, function (err, value) {
+	    if (err) console.log('Ooops!', err); // likely the key was not found
+
+	    res.send(value);
+	  })*/
 	})
 
 });
