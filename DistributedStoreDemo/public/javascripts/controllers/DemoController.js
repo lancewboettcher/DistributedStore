@@ -14,6 +14,10 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 
 
 	$scope.spawn = function(numNodes) {
+		if ($scope.leader.port != undefined && $scope.leader.port != "undefined") {
+			console.log("No leader yet");
+		}
+
 		$http.get("/spawn/" + numNodes).success(function(data, status) {
 			$scope.nodes = data;
 			
@@ -23,12 +27,10 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
             payload.id = "tcp+msgpack://localhost:" + data[data.length - 1].port;
             console.log("Trying to join with: " + payload.id);
 
-            if ($scope.leader.port != undefined && $scope.leader.port != "undefined") {
-	            $http.post("http://localhost:" + $scope.leader.port + "/join/",payload).success(function(data, status) {
-					
-		            console.log("Joined maybe");
-		        });
-	    	}
+            $http.post("http://localhost:" + $scope.leader.port + "/join/",payload).success(function(data, status) {
+				
+	            console.log("Process Joined");
+	        });
         });
 	};
 	$scope.kill = function(pid) {
