@@ -60,7 +60,7 @@ module.exports.spawnNodes = function(n, cb) {
 
                     console.log(child.pid, data.toString());
 
-                    if (data.toString().indexOf("leader") > -1) {
+                    if (data.toString().indexOf("now leader") > -1) {
                         console.log("PARENT: " + child.pid + " is leader");
                         leader.pid = child.pid;
                         leader.port = child.port;
