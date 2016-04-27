@@ -1,6 +1,5 @@
 angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider
-
         // home page
         .when('/', {
             templateUrl: 'views/home.html',
@@ -8,6 +7,11 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
             resolve: {
                 nodes: function($http) {
                     return $http({method : "GET", url : "/nodes"}).then(function(result) {
+                        return result.data;
+                    })
+                },
+                leader: function($http) {
+                    return $http({method : "GET", url : "/leader"}).then(function(result) {
                         return result.data;
                     })
                 }

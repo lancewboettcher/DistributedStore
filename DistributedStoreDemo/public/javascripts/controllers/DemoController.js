@@ -1,8 +1,10 @@
-angular.module('DemoCtrl', []).controller('DemoController', function($scope, $http, $location, nodes) {
+angular.module('DemoCtrl', []).controller('DemoController', function($scope, $http, $location, nodes, leader) {
 
 	$scope.nodes = nodes;
 	$scope.activeNode;
 	$scope.nodesToSpawn = 10;
+	$scope.leader = leader;
+	$scope.getResponse;
 
 	$scope.spawn = function(numNodes) {
 		$http.get("/spawn/" + numNodes).success(function(data, status) {
@@ -28,6 +30,7 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 
 	$scope.setActiveNode = function(node) {
 		$scope.activeNode = node;
+		$scope.getResponse = ""
 		//$scope.activeUrl = $location + node.port;
 	}
 
@@ -58,6 +61,12 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 		$http.get('/killAll').success(function (response) {
 			console.log("Killed All");
 			$scope.nodes = [];
+		});
+	}
+	$scope.getLeader = function() {
+		$http.get('/leader').success(function (response) {
+			console.log("Leader");
+			$scope.leader = response;
 		});
 	}
 });

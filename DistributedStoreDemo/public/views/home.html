@@ -35,11 +35,13 @@
 					<td>{{node.port}}</td>
 					<td><button type="button" class="btn btn-primary" ng-click="setActiveNode(node)">Test</button></td>
 					<td><button type="button" class="btn btn-primary" ng-click="kill(node.pid)">Kill</button></td>
+					<td ng-if="node.port==leader.port"><div class="alert alert-success" role="alert">Leader</div></td>
 				</tr>
 			</tbody>
 		</table>
 		<button type="button" class="btn btn-primary" ng-click="killAll()">Kill All Nodes</button>
 		<button type="button" class="btn btn-primary" ng-click="deleteData()">Delete All Databases</button>
+		<button type="button" class="btn btn-primary pull-right" ng-click="getLeader()">Get Leader</button>
 	</div>
 </div>
 

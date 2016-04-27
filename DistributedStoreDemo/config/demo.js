@@ -1,6 +1,7 @@
 var spawn = require('child_process').spawn;
 var portfinder = require('portfinder');
 var nodes = [];
+var leader = {};
 
 module.exports.killNode = function(pid) {
 
@@ -10,6 +11,9 @@ module.exports.killNode = function(pid) {
         if (nodes[i].pid == pid) {
             process.kill(pid);
             nodes.splice(i, 1);
+
+            if (leader.pid == pid)
+                leader = {};
         }
     }
 };
@@ -19,6 +23,7 @@ module.exports.killAll = function() {
         process.kill(nodes[i].pid);
     }
     nodes = [];
+    leader = {};
 };
 
 module.exports.spawnNodes = function(n, cb) {
@@ -54,6 +59,12 @@ module.exports.spawnNodes = function(n, cb) {
                 child.stdout.on('data', function (data) {
 
                     console.log(child.pid, data.toString());
+
+                    if (data.toString().indexOf("leader") > -1) {
+                        console.log("PARENT: " + child.pid + " is leader");
+                        leader.pid = child.pid;
+                        leader.port = child.port;
+                    }
                 });
 
                 // Listen for any errors:
@@ -96,4 +107,8 @@ module.exports.getNodes = function() {
         data.push(thisNode);
     }
     return data;
+};
+
+module.exports.getLeader = function() {
+    return leader;
 };

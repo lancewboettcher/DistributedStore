@@ -17,6 +17,12 @@ router.get('/nodes', function(req, res, next) {
   res.send(nodes);
 });
 
+router.get('/leader', function(req, res, next) {
+  var leader = demo.getLeader();
+
+  res.send(leader);
+});
+
 router.get('/spawn/:numNodes', function(req, res, next) {
   demo.spawnNodes(req.params.numNodes, function(data) {
 	res.send(data);
