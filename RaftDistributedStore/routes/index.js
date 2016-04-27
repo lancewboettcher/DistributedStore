@@ -1,9 +1,26 @@
 var express = require('express');
 var router = express.Router();
+//var raft = require('../config/raft');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
+});
+
+router.post('/join', function(req, res, next) {
+
+  	console.log("Joining: " + req.body.id);
+	var node = req.app.get('node');
+
+	node.join(req.body.id, function(err) {
+      if (err) {
+      	console.log("ERRROR Joinging")
+        console.log(err);
+      }
+
+      res.send("Joined");
+    });
+
 });
 
 router.get('/node', function(req, res, next) {
@@ -38,7 +55,7 @@ router.post('/', function(req, res, next) {
 	  node.get(req.body.key, function (err, value) {
 	    if (err) console.log('Ooops!', err); // likely the key was not found
 
-	    res.send(req.body.key + " : " + value);
+	    res.send(value);
 	  })
 	})
 

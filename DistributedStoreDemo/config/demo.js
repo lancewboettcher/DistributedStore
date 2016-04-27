@@ -2,23 +2,6 @@ var spawn = require('child_process').spawn;
 var portfinder = require('portfinder');
 var nodes = [];
 
-module.exports.spawnNode = function() {
-
-    console.log("Spawning Node: " + nodes.length);
-
-    var child = spawn('node', ['app.js'],
-        { cwd: "../RaftDistributedStore2/" });
-
-    child.stdout.on('data', 
-        function (data) {
-            console.log('yyChild output: ' + data);
-        }
-    );
-
-    nodes.push(child);
-
-};
-
 module.exports.killNode = function(pid) {
 
     console.log("Killing Node: " + pid);
@@ -29,6 +12,13 @@ module.exports.killNode = function(pid) {
             nodes.splice(i, 1);
         }
     }
+};
+
+module.exports.killAll = function() {
+    for(var i = 0; i < nodes.length; i++) {
+        process.kill(nodes[i].pid);
+    }
+    nodes = [];
 };
 
 module.exports.spawnNodes = function(n, cb) {
@@ -47,6 +37,12 @@ module.exports.spawnNodes = function(n, cb) {
                 options.cwd = "../RaftDistributedStore/";
                 options.env = Object.create( process.env );
                 options.env.PORT = port;
+
+                if (nodes.length == 0)
+                    options.env.LEADER = true;
+                else 
+                    options.env.LEADER = false;
+
                 console.log(options);
 
                 var child = spawn('./bin/www', [], options);

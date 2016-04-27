@@ -2,6 +2,7 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 
 	$scope.nodes = nodes;
 	$scope.activeNode;
+	$scope.nodesToSpawn = 10;
 
 	$scope.spawn = function(numNodes) {
 		$http.get("/spawn/" + numNodes).success(function(data, status) {
@@ -13,7 +14,7 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
             payload.id = "tcp+msgpack://localhost:" + data[data.length - 1].port;
             console.log("Trying to join with: " + payload.id);
 
-            $http.post("http://localhost:8001/join/",payload).success(function(data, status) {
+            $http.post("http://localhost:8000/join/",payload).success(function(data, status) {
 				
 	            console.log("Joined maybe");
 	        });
@@ -33,7 +34,7 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 	$scope.get = function(key) {
 		$http.get('http://localhost:' + $scope.activeNode.port + "/" + key).success(function (response) {
 			$scope.getResponse = response;
-			console.log(response);
+			console.log("Response: " + response);
 		});
 	}
 	$scope.put = function(key, value) {
@@ -42,6 +43,21 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 		data.value = value;
 		$http.post('http://localhost:' + $scope.activeNode.port + "/", data).success(function (response) {
 			console.log(response);
+			if (response == undefined || response == "") {
+				alert("Can't write to this. Not the leader");
+			}
+		});
+	}
+	$scope.deleteData = function() {
+		$http.get('/deleteData').success(function (response) {
+			console.log("Deleting data");
+			console.log(response);
+		});
+	}
+	$scope.killAll = function() {
+		$http.get('/killAll').success(function (response) {
+			console.log("Killed All");
+			$scope.nodes = [];
 		});
 	}
 });

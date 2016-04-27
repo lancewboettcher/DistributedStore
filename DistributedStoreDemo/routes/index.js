@@ -3,6 +3,7 @@ var router = express.Router();
 var path = require('path');
 
 var demo = require('../config/demo');
+var rimraf = require('rimraf');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -27,6 +28,20 @@ router.get('/kill/:pid', function(req, res, next) {
   demo.killNode(req.params.pid);
 
   res.send(demo.getNodes());
+});
+
+router.get('/killAll', function(req, res, next) {
+  demo.killAll();
+
+  res.send(demo.getNodes());
+});
+
+router.get('/deleteData', function(req, res, next) {
+  rimraf('../DB*', function(err) {
+    if (err) { res.send(err); }
+    
+    res.send("Success");
+  })
 });
 
 router.get('/check', function(req, res, next) {

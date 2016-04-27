@@ -9,45 +9,51 @@ var debug = require('debug')('RaftDistributedStore:server');
 var http = require('http');
 var portfinder = require('portfinder');
 
-var Skiff = require('skiff');
-
 /**
  * Get port from environment and store in Express.
  */
 var server = http.createServer(app);
-console.log("HELLOOOO");
+console.log("HELLOOOO2");
 
 
 var port = normalizePort(process.env.PORT || '8000');
 app.set('port', port);
 
-var dbName = 'DB' + port;
-    console.log("DB: " + dbName);
-    var options = {
-      dbPath: dbName,
-      standby: true
-    };
+var Skiff = require('skiff');
 
-    console.log("here");
-    var node = Skiff('tcp+msgpack://localhost:' + port, options);
-    app.set('node',node);
+//module.exports.init = function(port, app) {
+console.log("INITIALIZING RAFT: " + process.env.LEADER);
 
-    node.once('joined', function() {
-          console.log("process joined");
-        });
+var dbName = '../DB' + port;
+console.log("DB: " + dbName);
+var options = {
+  dbPath: dbName, 
+  standby: true
+};
 
-    node.once('state', function(state) {
-          console.log("state change");
-          console.log(state);
-        });
-    node.once('leader', function() {
-      console.log(port + " now leader");
+if (process.env.LEADER == "true") {
+  options.standby = false;
+}
+
+var node = Skiff('tcp+msgpack://localhost:' + port, options);
+app.set('node',node);
+
+node.once('joined', function() {
+      console.log("process joined");
     });
+
+node.once('state', function(state) {
+      console.log("state change");
+      console.log(state);
+    });
+node.once('leader', function() {
+  app.set('leader', port);
+  console.log(port + " now leader");
+});
 
 /**
  * Create HTTP server.
  */
-
 
 /**
  * Listen on provided port, on all network interfaces.

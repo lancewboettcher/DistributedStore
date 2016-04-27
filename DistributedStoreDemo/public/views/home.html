@@ -1,8 +1,22 @@
+<h3>{{nodes.length}} Active Nodes </h3>
 <div class="row">
-	<div class="col-md-12">
-		<h3>{{nodes.length}} Active Nodes </h3>
-		<button type="button" class="btn btn-primary" ng-click="spawn(1)">Spawn</button>
-	</div>	
+	<div class="col-md-5">
+		<button type="button" class="btn btn-primary" ng-click="spawn(1)">Spawn Single Node</button>
+		<button type="button" class="btn btn-primary" ng-click="spawn(nodesToSpawn)">Spawn Multiple Nodes</button>
+	</div>
+	<div class="input-group col-md-2">
+	  <span class="input-group-btn">
+	      <button type="button" class="btn btn-default btn-number" ng-click="nodesToSpawn=(nodesToSpawn - 1)">
+	          <span class="glyphicon glyphicon-minus"></span>
+	      </button>
+	  </span>
+	  <input style="text-align:center;"type="text" name="quant[1]" class="form-control input-number" ng-model="nodesToSpawn">
+	  <span class="input-group-btn">
+	      <button type="button" class="btn btn-default btn-number" ng-click="nodesToSpawn=(nodesToSpawn + 1)">
+	          <span class="glyphicon glyphicon-plus"></span>
+	      </button>
+	  </span>
+	</div>
 </div>
 <div class="row">
 	<div class="col-md-12">
@@ -24,6 +38,8 @@
 				</tr>
 			</tbody>
 		</table>
+		<button type="button" class="btn btn-primary" ng-click="killAll()">Kill All Nodes</button>
+		<button type="button" class="btn btn-primary" ng-click="deleteData()">Delete All Databases</button>
 	</div>
 </div>
 
