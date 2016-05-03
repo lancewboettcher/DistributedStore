@@ -1,5 +1,6 @@
 var spawn = require('child_process').spawn;
 var portfinder = require('portfinder');
+var hostname = require('os').hostname();
 var nodes = [];
 var leader = {};
 
