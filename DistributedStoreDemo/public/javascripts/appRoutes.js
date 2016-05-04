@@ -14,7 +14,11 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
                     return $http({method : "GET", url : "/leader"}).then(function(result) {
                         return result.data;
                     })
-                }
+                }/*,
+                algorithm : function($http, $routeParams) {
+                    console.log("here");
+                    return $routeParams.algorithm;
+                }*/
             }
         })
 

@@ -39,21 +39,23 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 			
             console.log("Spawned " + numNodes + " Nodes");
 
+            if ($scope.selectedAlgorithm == "RaftDistributedStore") {
+            	if ($scope.nodes.length > 1 && $scope.leader.port != undefined 
+	            	&& $scope.leader.port != "undefined") {
+		            
+	            	for (var i = $scope.nodes.length - numNodes; i < $scope.nodes.length; i++) {
+	            		var payload = {};
+			            //payload.id = "tcp+msgpack://" + data[i].parent.host + ":" + data[i].skiffPort;
+			            payload.id = "tcp+msgpack://localhost:" + data[i].skiffPort;
+			            console.log("Trying to join with: " + payload.id);
 
-            if ($scope.nodes.length > 1 && $scope.leader.port != undefined && $scope.leader.port != "undefined") {
-	            
-            	for (var i = $scope.nodes.length - numNodes; i < $scope.nodes.length; i++) {
-            		var payload = {};
-		            //payload.id = "tcp+msgpack://" + data[i].parent.host + ":" + data[i].skiffPort;
-		            payload.id = "tcp+msgpack://localhost:" + data[i].skiffPort;
-		            console.log("Trying to join with: " + payload.id);
-
-		           	$http.post("http://" + $scope.leader.parent.host + ":" + $scope.leader.port + "/join/",payload).success(function(result, status) {
-					
-		            	console.log("Process Joined");
-		        	});
-            	}
-		    }
+			           	$http.post("http://" + $scope.leader.parent.host + ":" + $scope.leader.port + "/join/",payload).success(function(result, status) {
+						
+			            	console.log("Process Joined");
+			        	});
+	            	}
+			    }
+            }
         });
 	};
 	$scope.kill = function(pid) {
