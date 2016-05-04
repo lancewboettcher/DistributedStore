@@ -27,7 +27,7 @@ module.exports.killAll = function() {
    // leader = {};
 };
 
-module.exports.spawnNodes = function(n, parent, cb) {
+module.exports.spawnNodes = function(n, parent, algorithm, cb) {
     console.log("Spawning " + n + " nodes");
     var ports = [];
     getPorts(n * 2, function(data) {
@@ -43,7 +43,7 @@ module.exports.spawnNodes = function(n, parent, cb) {
                 console.log("Skiffport [" + skiffPortIndex + "] : " + data[skiffPortIndex]);
 
                 var options = {};
-                options.cwd = "../RaftDistributedStore/";
+                options.cwd = "../" + algorithm + "/";
                 options.env = Object.create( process.env );
                 options.env.PORT = port;
                 options.env.SKIFFPORT = data[skiffPortIndex];

@@ -19,6 +19,8 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 	$scope.parents.push(parent);
 	$scope.selectedParent = $scope.parents[Math.floor(Math.random() * $scope.parents.length)];
 
+	$scope.selectedAlgorithm = "RaftDistributedStore";
+
 	$scope.spawn = function(numNodes) {
 		$scope.getLeader();
 		if ($scope.leader.port != undefined && $scope.leader.port != "undefined") {
@@ -30,6 +32,7 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 		else
 			payload.parent = $scope.selectedParent;*/
 		payload.parent = $scope.selectedParent;
+		payload.algorithm = $scope.selectedAlgorithm;
 
 		$http.post("http://" + payload.parent.host + ":" + payload.parent.port + "/spawn/" + numNodes, payload).success(function(data, status) {
 			$scope.nodes = data;

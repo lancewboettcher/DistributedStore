@@ -24,7 +24,7 @@ router.get('/leader', function(req, res, next) {
 });
 
 router.post('/spawn/:numNodes', function(req, res, next) {
-  demo.spawnNodes(req.params.numNodes, req.body.parent, function(data) {
+  demo.spawnNodes(req.params.numNodes, req.body.parent, req.body.algorithm, function(data) {
 	
     res.send(data);
 

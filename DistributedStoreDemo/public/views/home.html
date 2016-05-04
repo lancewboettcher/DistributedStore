@@ -1,5 +1,13 @@
 <!--h3>{{nodes.length}} Active Nodes </h3-->
-<h2>Raft Consensus</h2>
+<h2>{{selectedAlgorithm}}</h2>
+<div class="row">
+	<div class="form-group form-inline col-md-12">
+		<select name="singleSelect" ng-model="selectedAlgorithm">
+			<option value="RaftDistributedStore">Raft</option>
+			<option value="TwoPhaseCommitDistributedStore">Two Phase Commit</option>
+		</select><br>
+	</div>
+</div>
 <div class="row">
 	<div class="col-md-5 form-group form-inline">
 		<button type="button" class="btn btn-primary" ng-click="spawn(1)">Spawn Single Node</button>
