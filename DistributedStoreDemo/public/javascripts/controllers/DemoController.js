@@ -41,7 +41,8 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 	            
             	for (var i = $scope.nodes.length - numNodes; i < $scope.nodes.length; i++) {
             		var payload = {};
-		            payload.id = "tcp+msgpack://" + data[i].parent.host + ":" + data[i].skiffPort;
+		            //payload.id = "tcp+msgpack://" + data[i].parent.host + ":" + data[i].skiffPort;
+		            payload.id = "tcp+msgpack://localhost:" + data[i].skiffPort;
 		            console.log("Trying to join with: " + payload.id);
 
 		           	$http.post("http://" + $scope.leader.parent.host + ":" + $scope.leader.port + "/join/",payload).success(function(result, status) {
