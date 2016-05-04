@@ -14,8 +14,8 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 
 	$scope.parents = [];
 	var parent = {};
-	parent.host = "localhost";
-	parent.port = "3000";
+	parent.host = $location.host();
+	parent.port = $location.port();
 	$scope.parents.push(parent);
 	$scope.selectedParent = $scope.parents[Math.floor(Math.random() * $scope.parents.length)];
 
