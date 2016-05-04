@@ -42,7 +42,8 @@ var node = Skiff('tcp+msgpack://localhost:' + skiffPort, options);
 app.set('node',node);
 
 node.once('joined', function(peer) {
-      console.log("process joined: " + peer);
+      console.log("Process joined: ");
+      console.log(peer);
     });
 
 node.once('state', function(state) {
@@ -55,15 +56,18 @@ node.once('leader', function() {
 });
 
 node.once('error', function(error) {
-  console.log("Error: " + error);
+  console.log("Error: ");
+  console.log(error);
 });
 
 node.once('warning', function(error) {
-  console.log("Warning: " + error);
+  console.log("Warning: ");
+  console.log(error);
 });
 
 node.once('connecting', function(peer) {
-  console.log("Connection: " + peer);
+  console.log("Connecting: ");
+  console.log(peer);
 });
 
 /**
