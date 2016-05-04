@@ -12,14 +12,26 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 	$scope.batchPut;
 	$scope.batchPut.keys = [];
 
+	$scope.parents = [];
+	var parent = {};
+	parent.host = "localhost";
+	parent.port = "3000";
+	$scope.parents.push(parent);
+	$scope.selectedParent = $scope.parents[Math.floor(Math.random() * $scope.parents.length)];
 
 	$scope.spawn = function(numNodes) {
 		$scope.getLeader();
 		if ($scope.leader.port != undefined && $scope.leader.port != "undefined") {
 			console.log("No leader yet");
 		}
+		var payload = {};
+		/*if ($scope.selectedParent == "random")
+			payload.parent = $scope.parents[Math.floor(Math.random() * $scope.parents.length)];
+		else
+			payload.parent = $scope.selectedParent;*/
+		payload.parent = $scope.selectedParent;
 
-		$http.get("/spawn/" + numNodes).success(function(data, status) {
+		$http.post("http://" + payload.parent.host + ":" + payload.parent.port + "/spawn/" + numNodes, payload).success(function(data, status) {
 			$scope.nodes = data;
 			
             console.log("Spawned " + numNodes + " Nodes");
@@ -29,10 +41,10 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 	            
             	for (var i = $scope.nodes.length - numNodes; i < $scope.nodes.length; i++) {
             		var payload = {};
-		            payload.id = "tcp+msgpack://localhost:" + data[i].skiffPort;
+		            payload.id = "tcp+msgpack://" + data[i].parent.host + ":" + data[i].skiffPort;
 		            console.log("Trying to join with: " + payload.id);
 
-		           	$http.post("http://localhost:" + $scope.leader.port + "/join/",payload).success(function(result, status) {
+		           	$http.post("http://" + $scope.leader.parent.host + ":" + $scope.leader.port + "/join/",payload).success(function(result, status) {
 					
 		            	console.log("Process Joined");
 		        	});
@@ -57,7 +69,7 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 	$scope.get = function(key) {
 		var data = {};
 		data.key = key;
-		$http.post('http://localhost:' + $scope.activeNode.port + "/get", data).success(function (response) {
+		$http.post("http://" + $scope.activeNode.parent.host + ":" + $scope.activeNode.port + "/get", data).success(function (response) {
 			console.log("Response: " + response);
 			if (response != undefined && response != "")
 				$scope.getResponse = response;
@@ -70,7 +82,7 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 		var data = {};
 		data.key = key;
 		data.value = value;
-		$http.post('http://localhost:' + $scope.activeNode.port + "/", data).success(function (response) {
+		$http.post("http://" + $scope.activeNode.parent.host + ":" + $scope.activeNode.port + "/", data).success(function (response) {
 			console.log(response);
 			if (response == undefined || response == "") {
 				alert("Can't write to this. Not the leader");
@@ -134,7 +146,7 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 		}
 		console.log(data);
 		
-		$http.post('http://localhost:' + $scope.activeNode.port + "/batch", data).success(function (response) {
+		$http.post("http://" + $scope.activeNode.parent.host + ":" + $scope.activeNode.port + "/batch", data).success(function (response) {
 			console.log(response);
 			if (response == undefined || response == "") {
 				alert("Can't write to this. Not the leader");

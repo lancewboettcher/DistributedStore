@@ -2,11 +2,11 @@
 <h2>Raft Consensus</h2>
 {{nodes}}
 <div class="row">
-	<div class="col-md-5">
+	<div class="col-md-5 form-group form-inline">
 		<button type="button" class="btn btn-primary" ng-click="spawn(1)">Spawn Single Node</button>
 		<button type="button" class="btn btn-primary" ng-click="spawn(nodesToSpawn)">Spawn Multiple Nodes</button>
 	</div>
-	<div class="input-group col-md-2">
+	<div class="input-group form-group form-inline col-md-2">
 	  <span class="input-group-btn">
 	      <button type="button" class="btn btn-default btn-number" ng-click="nodesToSpawn=(nodesToSpawn - 1)">
 	          <span class="glyphicon glyphicon-minus"></span>
@@ -19,6 +19,15 @@
 	      </button>
 	  </span>
 	</div>
+	<div class="form-group form-inline col-md-12">
+		<div class="form-group">
+			<label>Parent:</label>
+			<input style="width:100px;"type="text" class="form-control" ng-model="selectedParent.host">
+			</div>
+			<div class="form-group">
+			<input style="width:100px;"type="text" class="form-control" ng-model="selectedParent.port">
+		</div>
+	</div>
 </div>
 <div class="row">
 	<div class="col-md-12">
@@ -27,16 +36,16 @@
 				<tr>
 					<th>Node</th>
 					<th>PID</th>
-					<th>Port</th>
+					<th>URL</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr ng-repeat="node in nodes">
 					<td>{{$index}}</td>
 					<td>{{node.pid}}</td>
-					<td>{{node.port}}</td>
+					<td>{{node.parent.host}}:{{node.port}}</td>
 					<td><button type="button" class="btn btn-primary" ng-click="setActiveNode(node)">Test</button></td>
-					<td><button type="button" class="btn btn-primary" ng-click="kill(node.pid)">Kill</button></td>
+					<td><button type="button" class="btn btn-primary" ng-click="kill(node.pid, node.parent)">Kill</button></td>
 					<td ng-if="node.port==leader.port"><div class="alert alert-success" role="alert" style="text-align:center;">Leader</div></td>
 				</tr>
 			</tbody>
@@ -98,12 +107,12 @@
 			</div-->
 			<div class="form-group form-inline">
 				<div class="form-group">
-				<label>Range:</label>
-				<input style="width:100px;"type="text" class="form-control" ng-model="batchPut.min">
+					<label>Range:</label>
+					<input style="width:100px;"type="text" class="form-control" ng-model="batchPut.min">
+					</div>
+					<div class="form-group">
+					<input style="width:100px;"type="text" class="form-control" ng-model="batchPut.max">
 				</div>
-				<div class="form-group">
-				<input style="width:100px;"type="text" class="form-control" ng-model="batchPut.max">
-			</div>
 			</div>
 			<div class="form-group">
 				<button type="button" class="btn btn-primary" ng-click="putBatch(batchPut.key,batchPut.value1,batchPut.value2, batchPut.min, batchPut.max)">Put</button>

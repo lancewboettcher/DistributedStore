@@ -27,7 +27,7 @@ module.exports.killAll = function() {
    // leader = {};
 };
 
-module.exports.spawnNodes = function(n, cb) {
+module.exports.spawnNodes = function(n, parent, cb) {
     console.log("Spawning " + n + " nodes");
     var ports = [];
     getPorts(n * 2, function(data) {
@@ -59,6 +59,7 @@ module.exports.spawnNodes = function(n, cb) {
                 console.log("PID: " + child.pid);
                 child.port = port;
                 child.skiffPort = data[skiffPortIndex];
+                child.parent = parent;
                 nodes.push(child);
 
                 // Listen for any response:
@@ -70,6 +71,7 @@ module.exports.spawnNodes = function(n, cb) {
                         console.log("PARENT: " + child.pid + " is leader");
                         leader.pid = child.pid;
                         leader.port = child.port;
+                        leader.parent = child.parent;
                     }
                 });
 
@@ -110,6 +112,7 @@ module.exports.getNodes = function() {
         thisNode.pid = nodes[i].pid;
         thisNode.port = nodes[i].port;
         thisNode.skiffPort = nodes[i].skiffPort;
+        thisNode.parent = nodes[i].parent;
 
         data.push(thisNode);
     }

@@ -23,9 +23,10 @@ router.get('/leader', function(req, res, next) {
   res.send(leader);
 });
 
-router.get('/spawn/:numNodes', function(req, res, next) {
-  demo.spawnNodes(req.params.numNodes, function(data) {
-	res.send(data);
+router.post('/spawn/:numNodes', function(req, res, next) {
+  demo.spawnNodes(req.params.numNodes, req.body.parent, function(data) {
+	
+    res.send(data);
 
   });
 });
