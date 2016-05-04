@@ -34,8 +34,11 @@ var options = {
 if (process.env.LEADER == "true") {
   options.standby = false;
 }
+var skiffPort = normalizePort(process.env.SKIFFPORT || '3002');
 
-var node = Skiff('tcp+msgpack://localhost:' + port, options);
+console.log("Using skiff port: " + skiffPort);
+
+var node = Skiff('tcp+msgpack://localhost:' + skiffPort, options);
 app.set('node',node);
 
 node.once('joined', function() {
