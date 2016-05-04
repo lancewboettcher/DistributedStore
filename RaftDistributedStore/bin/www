@@ -41,8 +41,8 @@ console.log("Using skiff port: " + skiffPort);
 var node = Skiff('tcp+msgpack://localhost:' + skiffPort, options);
 app.set('node',node);
 
-node.once('joined', function() {
-      console.log("process joined");
+node.once('joined', function(peer) {
+      console.log("process joined: " + peer);
     });
 
 node.once('state', function(state) {
@@ -52,6 +52,18 @@ node.once('state', function(state) {
 node.once('leader', function() {
   app.set('leader', port);
   console.log(port + " now leader");
+});
+
+node.once('error', function(error) {
+  console.log("Error: " + error);
+});
+
+node.once('warning', function(error) {
+  console.log("Warning: " + error);
+});
+
+node.once('connecting', function(peer) {
+  console.log("Connection: " + peer);
 });
 
 /**
