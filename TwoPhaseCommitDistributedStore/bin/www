@@ -8,7 +8,11 @@ var app = require('../app');
 var debug = require('debug')('RaftDistributedStore:server');
 var http = require('http');
 var portfinder = require('portfinder');
-var levelup = require('levelup');
+//var levelup = require('levelup');
+
+var level = require('level');
+var Replicator = require('level-2pc');
+var net = require('net');
 
 
 /**
@@ -25,9 +29,143 @@ var dbName = '../DB' + port;
 
 console.log("Using DB name: " + dbName);
 
-var db = levelup(dbName);
+//var db = levelup(dbName);
 
-app.set('db', db);
+
+
+
+function createOpts(localport, ports, min, failAfter) {
+  var peers = ports.map(function(port) {
+    return { host: 'localhost', port: port }
+  })
+
+  return { 
+    peers: peers,
+    port: localport,
+    minConsensus: min,
+    failAfter: failAfter || 16,
+    host: 'localhost'
+  }
+}
+
+var i = 4;
+  var dbs = {};
+  var rs = {};
+  var servers = {};
+
+  while(i > 0) {
+    dbs['db' + i] = level('../DB' + i, { keyEncoding: 'utf8', valueEncoding: 'utf8' });
+    i--;
+  }
+
+  app.set('node', dbs.db1);
+
+  rs.r1 = Replicator(dbs.db1, createOpts(3001, []));
+
+  rs.r1.on('error', function(error) {
+    console.log("Error: ");
+    console.log(error);
+  });
+  rs.r1.on('notready', function() {
+    console.log("Not Ready");
+  });
+  rs.r1.on('connect', function(host, port) {
+    console.log("Connect: " + host + " : " + port);
+  });
+  rs.r1.on('disconnect', function() {
+    console.log("Disconnect ");
+  });
+  rs.r1.on('reconnect', function() {
+    console.log("Reconnect ");
+  });
+  rs.r1.on('fail', function() {
+    console.log("Fail ");
+  });
+
+  servers.r1 = net.createServer(function(con) {
+      var server = rs.r1.createServer()
+      server.pipe(con).pipe(server)
+    }).listen(3001)
+
+
+  rs.r2 = Replicator(dbs.db2, createOpts(3002, [3001]));
+
+  rs.r2.on('error', function(error) {
+    console.log("Error: ");
+    console.log(error);
+  });
+  rs.r2.on('notready', function() {
+    console.log("Not Ready");
+  });
+  rs.r2.on('connect', function(host, port) {
+    console.log("Connect: " + host + " : " + port);
+  });
+  rs.r2.on('disconnect', function() {
+    console.log("Disconnect ");
+  });
+  rs.r2.on('reconnect', function() {
+    console.log("Reconnect ");
+  });
+  rs.r2.on('fail', function() {
+    console.log("Fail ");
+  });
+
+  servers.r2 = net.createServer(function(con) {
+      var server = rs.r2.createServer()
+      server.pipe(con).pipe(server)
+    }).listen(3002)
+
+/*
+rs.r1 = Replicator(dbs.db1, createOpts(3001, [3002, 3003, 3004]))
+    rs.r2 = Replicator(dbs.db2, createOpts(3002, [3003, 3001, 3004]))
+    rs.r3 = Replicator(dbs.db3, createOpts(3003, [3001, 3002, 3004]))
+    rs.r4 = Replicator(dbs.db3, createOpts(3004, [3001, 3002, 3003]))
+
+    servers.r1 = net.createServer(function(con) {
+      var server = rs.r1.createServer()
+      server.pipe(con).pipe(server)
+    }).listen(3001)
+
+    servers.r2 = net.createServer(function(con) {
+      var server = rs.r2.createServer()
+      server.pipe(con).pipe(server)
+    }).listen(3002)
+
+    servers.r3 = net.createServer(function(con) {
+      var server = rs.r3.createServer()
+      server.pipe(con).pipe(server)
+    }).listen(3003)
+
+    servers.r4 = net.createServer(function(con) {
+      var server = rs.r4.createServer()
+      server.pipe(con).pipe(server)
+    }).listen(3004)
+*/
+
+/*
+var db = level(dbName, { valueEncoding: 'json' });
+
+app.set('node', db);
+
+var opts = {
+  peers: [
+    { host: 'localhost', port: 3001 },
+    { host: 'localhost', port: 3002 }
+  ]
+};
+
+var r = Replicator(db, opts);
+
+net.createServer(function(con) {
+  var dbServer = r.createServer();
+  server.pipe(con).pipe(dbServer);
+}).listen(3000);
+*/
+
+
+
+
+
 
 /**
  * Create HTTP server.
