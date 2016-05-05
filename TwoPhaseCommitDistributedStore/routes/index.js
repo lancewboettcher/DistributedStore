@@ -51,6 +51,9 @@ router.post('/get', function(req, res, next) {
 	node.get(req.body.key, function (err, value) {
 	    if (err) console.log('Ooops!', err); // likely the key was not found
 
+	    console.log("VALUE: ");
+	    console.log(value);
+
 	    res.send(value);
 	  })
 

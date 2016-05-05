@@ -75,6 +75,8 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 	$scope.get = function(key) {
 		var data = {};
 		data.key = key;
+		console.log("Getting key: " + key);
+
 		$http.post("http://" + $scope.activeNode.parent.host + ":" + $scope.activeNode.port + "/get", data).success(function (response) {
 			console.log("Response: " + response);
 			if (response != undefined && response != "")
@@ -142,11 +144,13 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 
 			if (value2 != undefined && value2 != null && value2 != "") {
 				val[$scope.csv.result[i][value1]] = $scope.csv.result[i][value2];
+
+				//val = "{" + $scope.csv.result[i][value1] + " : " + $scope.csv.result[i][value2] + "}";
 			}
 			else {
 				val = $scope.csv.result[i][value1];
 			}
-			entry.value = val;
+			entry.value = JSON.stringify(val);
 
 			data.push(entry);
 		}

@@ -48,6 +48,18 @@ module.exports.spawnNodes = function(n, parent, algorithm, cb) {
                 options.env.PORT = port;
                 options.env.SKIFFPORT = data[skiffPortIndex];
 
+                if (algorithm == "TwoPhaseCommitDistributedStore") {
+                    var portList = "";
+                    var hostList = "";
+                    for (var w = 0; w < nodes.length; w++) {
+                        portList = portList + nodes[w].skiffPort + ",";
+                        hostList = hostList + nodes[w].parent.host + ",";
+                    }
+
+                    options.env.NODEPORTS = portList;
+                    options.env.NODEHOSTS = hostList;
+                }
+
                 if (nodes.length == 0)
                     options.env.LEADER = true;
                 else 
@@ -116,6 +128,8 @@ module.exports.getNodes = function() {
 
         data.push(thisNode);
     }
+    console.log("GET NODES. LENGTH: " + data.length);
+
     return data;
 };
 
