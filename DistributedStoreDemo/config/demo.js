@@ -30,6 +30,7 @@ module.exports.killAll = function() {
 module.exports.spawnNodes = function(n, parent, algorithm, cb) {
     console.log("Spawning " + n + " nodes");
     var ports = [];
+    var newNodes = [];
     getPorts(n * 2, function(data) {
         console.log(data);
 
@@ -74,6 +75,14 @@ module.exports.spawnNodes = function(n, parent, algorithm, cb) {
                 child.skiffPort = data[skiffPortIndex];
                 child.parent = parent;
                 nodes.push(child);
+/*
+                var tn = {};
+                tn.pid = nodes[i].pid;
+                tn.port = nodes[i].port;
+                tn.skiffPort = nodes[i].skiffPort;
+                tn.parent = nodes[i].parent;
+
+                newNodes.push(tn);*/
 
                 // Listen for any response:
                 child.stdout.on('data', function (data) {
@@ -100,6 +109,9 @@ module.exports.spawnNodes = function(n, parent, algorithm, cb) {
 
                 if (i == (n - 1)) {
                     return cb(module.exports.getNodes());
+                    /*console.log("Returning new nodes from spawn:");
+                    console.log(newNodes);
+                    return cb(newNodes);*/
                 }
                   
             })(i)

@@ -59,7 +59,7 @@
 		</table>
 		<button type="button" class="btn btn-danger" ng-click="killAll()">Kill All Nodes</button>
 		<button type="button" class="btn btn-danger" ng-click="deleteData()">Delete All Databases</button>
-		<button type="button" class="btn btn-primary pull-right" ng-click="getLeader()">Get Leader</button>
+		<button type="button" class="btn btn-primary pull-right" ng-click="getLeader()" ng-if="selectedAlgorithm=='RaftDistributedStore'">Get Leader</button>
 	</div>
 </div>
 <hr>

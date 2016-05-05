@@ -19,7 +19,7 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 	$scope.parents.push(parent);
 	$scope.selectedParent = $scope.parents[Math.floor(Math.random() * $scope.parents.length)];
 
-	$scope.selectedAlgorithm = "RaftDistributedStore";
+	$scope.selectedAlgorithm = "TwoPhaseCommitDistributedStore";
 
 	$scope.spawn = function(numNodes) {
 		$scope.getLeader();
@@ -35,15 +35,24 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 		payload.algorithm = $scope.selectedAlgorithm;
 
 		$http.post("http://" + payload.parent.host + ":" + payload.parent.port + "/spawn/" + numNodes, payload).success(function(data, status) {
-			$scope.nodes = data;
+			/*for (var k = 0; k < data.length; k ++) {
+				$scope.nodes.push(data[k]);
+			}*/
+			//$scope.nodes = data;
 			
             console.log("Spawned " + numNodes + " Nodes");
 
             if ($scope.selectedAlgorithm == "RaftDistributedStore") {
-            	if ($scope.nodes.length > 1 && $scope.leader.port != undefined 
+            	
+            	if ($scope.nodes.length == 0)
+					$scope.nodes.push(data[0]);
+
+            	if ($scope.nodes.length > 0 && $scope.leader.port != undefined 
 	            	&& $scope.leader.port != "undefined") {
 		            
-	            	for (var i = $scope.nodes.length - numNodes; i < $scope.nodes.length; i++) {
+	            	for (var i = data.length - numNodes; i < data.length; i++) {
+	            		$scope.nodes.push(data[i]);
+
 	            		var payload = {};
 			            //payload.id = "tcp+msgpack://" + data[i].parent.host + ":" + data[i].skiffPort;
 			            payload.id = "tcp+msgpack://localhost:" + data[i].skiffPort;
@@ -56,11 +65,21 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 	            	}
 			    }
             }
+            else {
+            	for (var i = data.length - numNodes; i < data.length; i++) {
+	            	$scope.nodes.push(data[i]);
+	            }
+            }
         });
 	};
 	$scope.kill = function(pid) {
 		$http.get("/kill/" + pid).success(function(data, status) {
-			$scope.nodes = data;
+			//$scope.nodes = data;
+			for(var i = 0; i < $scope.nodes.length; i++) {
+		        if ($scope.nodes[i].pid == pid) {
+		            $scope.nodes.splice(i, 1);
+		        }
+		    }
 
 			$scope.getLeader();
         });
