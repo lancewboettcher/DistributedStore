@@ -27,7 +27,7 @@ module.exports.killAll = function() {
    // leader = {};
 };
 
-module.exports.spawnNodes = function(n, parent, algorithm, cb) {
+module.exports.spawnNodes = function(n, parent, algorithm, portList, hostList, cb) {
     console.log("Spawning " + n + " nodes");
     var ports = [];
     var newNodes = [];
@@ -49,7 +49,10 @@ module.exports.spawnNodes = function(n, parent, algorithm, cb) {
                 options.env.PORT = port;
                 options.env.SKIFFPORT = data[skiffPortIndex];
                 options.env.MYHOST = parent.host;
+                options.env.NODEPORTS = portList;
+                options.env.NODEHOSTS = hostList;
 
+                /*
                 if (algorithm == "TwoPhaseCommitDistributedStore") {
                     var portList = "";
                     var hostList = "";
@@ -60,7 +63,7 @@ module.exports.spawnNodes = function(n, parent, algorithm, cb) {
 
                     options.env.NODEPORTS = portList;
                     options.env.NODEHOSTS = hostList;
-                }
+                }*/
 
                 if (nodes.length == 0)
                     options.env.LEADER = true;

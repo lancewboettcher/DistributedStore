@@ -34,6 +34,18 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 		payload.parent = $scope.selectedParent;
 		payload.algorithm = $scope.selectedAlgorithm;
 
+
+		if ($scope.selectedAlgorithm == "TwoPhaseCommitDistributedStore") {
+            var portList = "";
+            var hostList = "";
+            for (var w = 0; w < $scope.nodes.length; w++) {
+                portList = portList + $scope.nodes[w].skiffPort + ",";
+                hostList = hostList + $scope.nodes[w].parent.host + ",";
+            }
+            payload.portList = portList;
+            payload.hostList = hostList;
+        }
+
 		$http.post("http://" + payload.parent.host + ":" + payload.parent.port + "/spawn/" + numNodes, payload).success(function(data, status) {
 			/*for (var k = 0; k < data.length; k ++) {
 				$scope.nodes.push(data[k]);
