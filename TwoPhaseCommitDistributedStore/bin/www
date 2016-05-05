@@ -32,7 +32,9 @@ console.log("Using DB name: " + dbName);
 //var db = levelup(dbName);
 
 
+var myHost = process.env.MYHOST;
 
+console.log("Using Host: " + myHost);
 
 function createOpts(localport, hosts, ports, min, failAfter) {
  /* var peers = ports.map(function(thisPort) {
@@ -53,7 +55,7 @@ function createOpts(localport, hosts, ports, min, failAfter) {
     port: localport,
     minConsensus: min,
     failAfter: failAfter || 16,
-    host: 'localhost'
+    host: myHost
   }
 }
 
@@ -72,8 +74,12 @@ function createOpts(localport, hosts, ports, min, failAfter) {
 
   console.log("Connecting to " + nodeHosts.length + " node hosts");
   console.log("Node Hosts:" + nodeHosts);
-  
-
+/*  
+  nodePorts = [];
+  nodeHosts = [];
+  nodePorts.push(8001);
+  nodeHosts.push("129.65.108.97");
+*/
 
   var twoPhasePort = normalizePort(process.env.SKIFFPORT || '3002');
 

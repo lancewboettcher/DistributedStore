@@ -47,6 +47,7 @@ module.exports.spawnNodes = function(n, parent, algorithm, cb) {
                 options.env = Object.create( process.env );
                 options.env.PORT = port;
                 options.env.SKIFFPORT = data[skiffPortIndex];
+                options.env.MYHOST = parent.host;
 
                 if (algorithm == "TwoPhaseCommitDistributedStore") {
                     var portList = "";
