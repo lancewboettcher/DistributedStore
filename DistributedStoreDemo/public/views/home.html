@@ -1,14 +1,33 @@
 <!--h3>{{nodes.length}} Active Nodes </h3-->
 <h2>{{selectedAlgorithm}}</h2>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Warning!</strong> You must enable cross cross origin resource sharing to use this application. 
+  Use something like <a href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi?hl=en">this</a> Chrome extension
+</div>
+<div class="row">
+	&nbsp;
+</div>
 <div class="row">
 	<div class="form-group form-inline col-md-12">
-		<select name="singleSelect" ng-model="selectedAlgorithm">
+		<label>Algorithm: </label>
+		<select name="singleSelect" ng-model="selectedAlgorithm" ng-change="killAll()">
 			<option value="RaftDistributedStore">Raft</option>
 			<option value="TwoPhaseCommitDistributedStore">Two Phase Commit</option>
 		</select><br>
 	</div>
 </div>
 <div class="row">
+
+	<div class="form-group form-inline col-md-12">
+		<div class="form-group">
+			<label>Parent:</label>
+			<input style="width:200px;"type="text" class="form-control" ng-model="selectedParent.host">
+			</div>
+			<div class="form-group">
+			<input style="width:100px;"type="text" class="form-control" ng-model="selectedParent.port">
+		</div>
+	</div>
 	<div class="col-md-5 form-group form-inline">
 		<button type="button" class="btn btn-primary" ng-click="spawn(1)">Spawn Single Node</button>
 		<button type="button" class="btn btn-primary" ng-click="spawn(nodesToSpawn)">Spawn Multiple Nodes</button>
@@ -25,15 +44,6 @@
 	          <span class="glyphicon glyphicon-plus"></span>
 	      </button>
 	  </span>
-	</div>
-	<div class="form-group form-inline col-md-12">
-		<div class="form-group">
-			<label>Parent:</label>
-			<input style="width:200px;"type="text" class="form-control" ng-model="selectedParent.host">
-			</div>
-			<div class="form-group">
-			<input style="width:100px;"type="text" class="form-control" ng-model="selectedParent.port">
-		</div>
 	</div>
 </div>
 <div class="row">

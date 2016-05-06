@@ -21,7 +21,9 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
                 }*/
             }
         })
-
+        .when('/about', {
+            templateUrl: 'views/about.html'
+        })
         .when('/nerds', {
             templateUrl: 'views/home.html',
             controller: 'DemoController'

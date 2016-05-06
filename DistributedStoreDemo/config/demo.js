@@ -24,7 +24,7 @@ module.exports.killAll = function() {
         process.kill(nodes[i].pid);
     }
     nodes = [];
-   // leader = {};
+    leader = {};
 };
 
 module.exports.spawnNodes = function(n, parent, algorithm, portList, hostList, cb) {

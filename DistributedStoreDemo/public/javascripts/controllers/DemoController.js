@@ -23,7 +23,7 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 
 	$scope.spawn = function(numNodes) {
 		$scope.getLeader();
-		if ($scope.leader.port != undefined && $scope.leader.port != "undefined") {
+		if ($scope.leader == null || $scope.leader.port != undefined && $scope.leader.port != "undefined") {
 			console.log("No leader yet");
 		}
 		var payload = {};
@@ -59,7 +59,7 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
             	if ($scope.nodes.length == 0)
 					$scope.nodes.push(data[0]);
 
-            	if ($scope.nodes.length > 0 && $scope.leader.port != undefined 
+            	if ($scope.nodes.length > 0 && $scope.leader != null && $scope.leader.port != undefined 
 	            	&& $scope.leader.port != "undefined") {
 		            
 	            	for (var i = data.length - numNodes; i < data.length; i++) {
@@ -121,12 +121,24 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 		var data = {};
 		data.key = key;
 		data.value = value;
+		/*
 		$http.post("http://" + $scope.activeNode.parent.host + ":" + $scope.activeNode.port + "/", data).success(function (response) {
 			console.log(response);
 			if (response == undefined || response == "") {
 				alert("Can't write to this. Not the leader");
 			}
-		});
+		});*/
+		$http.post("http://" + $scope.activeNode.parent.host + ":" + $scope.activeNode.port + "/", data)
+		  .then(function successCallback(response) {
+		    console.log(response);
+			if (response == undefined || response == "") {
+				alert("Can't write to this. Not the leader (if using raft)");
+			}
+		  }, function errorCallback(response) {
+		    console.log("error");
+		    console.log(response);
+		    alert("API call failed. Have you enabled cross origin resource sharing?");
+		  });
 	}
 	$scope.deleteData = function() {
 		$http.get('/deleteData').success(function (response) {
@@ -135,10 +147,13 @@ angular.module('DemoCtrl', []).controller('DemoController', function($scope, $ht
 		});
 	}
 	$scope.killAll = function() {
+		$scope.deleteData();
+
 		$http.get('/killAll').success(function (response) {
 			console.log("Killed All");
 			$scope.nodes = [];
 			$scope.activeNode = null;
+			$scope.leader = null;
 		});
 	}
 	$scope.getLeader = function() {
